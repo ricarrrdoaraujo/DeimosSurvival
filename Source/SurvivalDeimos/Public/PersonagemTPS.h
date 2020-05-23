@@ -29,6 +29,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class USpringArmComponent* SpringArmCamera;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Pulo")
+	bool bEstaPulando;
+
+	void Pular();
+
+	void PararPulo();
+
 	//Crouch
 	void Agachar();
 

@@ -6,6 +6,9 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Character.h"
+
 
 // Sets default values
 APersonagemTPS::APersonagemTPS()
@@ -27,6 +30,10 @@ APersonagemTPS::APersonagemTPS()
 	//Indicando que o personagem poderá fazer o agachamento
 	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
+	GetCharacterMovement()->AirControl = 0.05f;
+	GetCharacterMovement()->JumpZVelocity = 425.f;
+	GetCharacterMovement()->GravityScale = 1.5f;
+
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
 
@@ -35,6 +42,16 @@ void APersonagemTPS::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void APersonagemTPS::Pular()
+{
+	bEstaPulando = true;
+}
+
+void APersonagemTPS::PararPulo()
+{
+	bEstaPulando = false;
 }
 
 void APersonagemTPS::Agachar()
@@ -90,4 +107,9 @@ void APersonagemTPS::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	//EInputEvent::IE_Released - Soltar botão
 	PlayerInputComponent->BindAction("Agachar", EInputEvent::IE_Released, this,
 		&APersonagemTPS::Levantar);
+
+	PlayerInputComponent->BindAction("Pular", EInputEvent::IE_Pressed, this,
+		&APersonagemTPS::Pular);
+	PlayerInputComponent->BindAction("Pular", EInputEvent::IE_Released, this,
+		&APersonagemTPS::PararPulo);
 }
