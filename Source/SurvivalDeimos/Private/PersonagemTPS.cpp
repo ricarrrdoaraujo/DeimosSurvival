@@ -50,5 +50,9 @@ void APersonagemTPS::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	//Amarrar MoverDireita a função
 	PlayerInputComponent->BindAxis("MoverDireita", this,
 		&APersonagemTPS::MoverDireita);
-
+	//Rotação do personagem
+	PlayerInputComponent->BindAxis("OlharCimaBaixo", this,
+		&APersonagemTPS::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("OlharDireitaEsquerda", this,
+		&APersonagemTPS::AddControllerYawInput);
 }
