@@ -23,6 +23,18 @@ protected:
 
 	void MoverDireita(float Valor);
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	class UCameraComponent* CameraPersonagem;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	class USpringArmComponent* SpringArmCamera;
+
+	//Crouch
+	void Agachar();
+
+	//Unchrouch
+	void Levantar();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

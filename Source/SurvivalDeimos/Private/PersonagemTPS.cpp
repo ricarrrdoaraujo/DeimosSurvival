@@ -3,6 +3,9 @@
 
 #include "PersonagemTPS.h"
 #include "Components/InputComponent.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
 
 // Sets default values
 APersonagemTPS::APersonagemTPS()
@@ -10,6 +13,21 @@ APersonagemTPS::APersonagemTPS()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	SpringArmCamera = CreateDefaultSubobject<USpringArmComponent>(FName("ApringArmCamera"));
+	//tamanho do braçco da spring
+	SpringArmCamera->TargetArmLength = 200.f; 
+	//usar rotacao do personagem
+	SpringArmCamera->bUsePawnControlRotation = true; 
+	SpringArmCamera->AddRelativeLocation(FVector(0.f, 40.f, 50.f));
+	SpringArmCamera->SetupAttachment(RootComponent);
+
+	CameraPersonagem = CreateDefaultSubobject<UCameraComponent>(FName("CameraPersonagem"));
+	CameraPersonagem->SetupAttachment(SpringArmCamera);
+
+	//Indicando que o personagem poderá fazer o agachamento
+	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
+	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
 
 // Called when the game starts or when spawned
@@ -17,6 +35,16 @@ void APersonagemTPS::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void APersonagemTPS::Agachar()
+{
+	Crouch();
+}
+
+void APersonagemTPS::Levantar()
+{
+	UnCrouch();
 }
 
 // Called every frame
@@ -55,4 +83,11 @@ void APersonagemTPS::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		&APersonagemTPS::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("OlharDireitaEsquerda", this,
 		&APersonagemTPS::AddControllerYawInput);
+
+	//EInputEvent::IE_Pressed - botão pessionado
+	PlayerInputComponent->BindAction("Agachar", EInputEvent::IE_Pressed, this,
+		&APersonagemTPS::Agachar);
+	//EInputEvent::IE_Released - Soltar botão
+	PlayerInputComponent->BindAction("Agachar", EInputEvent::IE_Released, this,
+		&APersonagemTPS::Levantar);
 }
