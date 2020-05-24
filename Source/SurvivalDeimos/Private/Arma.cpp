@@ -16,6 +16,7 @@
 #include "Animation/SkeletalMeshActor.h"
 #include "Materials/MaterialInterface.h"
 #include "Math/UnrealMathUtility.h"
+#include "Sound/SoundBase.h"
 
 // Sets default values
 AArma::AArma()
@@ -28,6 +29,7 @@ AArma::AArma()
 	ImpactoSangue = nullptr;
 	ImpactoGeral = nullptr;
 	DecalImpactoGeral = nullptr;
+	SomDoTiro = nullptr;
 
 	MalhaDaArma = CreateDefaultSubobject<USkeletalMeshComponent>(FName("MalhaDaArma"));
 
@@ -93,6 +95,11 @@ void AArma::Atirar()
 
 		bool AcertouEmAlgo = GetWorld()->LineTraceSingleByChannel(InfoImpacto,
 			Inicio, Fim, ECollisionChannel::ECC_Visibility, Parametros);
+
+		if (SomDoTiro)
+		{
+			UGameplayStatics::PlaySoundAtLocation(SetaDaArma, SomDoTiro, Inicio);
+		}
 
 		if (AcertouEmAlgo)
 		{

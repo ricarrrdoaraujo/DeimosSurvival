@@ -30,6 +30,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Arma", meta = (AllowPrivateAccess = "true"))
 	class UArrowComponent* SetaDaArma;
 
+	UPROPERTY(EditAnywhere, Category = "Arma")
+	class USoundBase* SomDoTiro;
+
 	UPROPERTY(EditAnywhere, Category = "EfeitosDaArma")
 	class UParticleSystem* EfeitoMuzzle;
 
@@ -41,6 +44,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "EfeitosImpacto")
 	class UMaterialInterface* DecalImpactoGeral;
+
 
 public:	
 	// Called every frame
