@@ -3,6 +3,8 @@
 
 #include "Arma.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/ArrowComponent.h"
+#include "Engine/EngineTypes.h"
 
 // Sets default values
 AArma::AArma()
@@ -11,8 +13,14 @@ AArma::AArma()
 	PrimaryActorTick.bCanEverTick = true;
 	MalhaDaArma = CreateDefaultSubobject<USkeletalMeshComponent>(FName("Malha da Arma"));
 
-
-
+	RootComponent = MalhaDaArma;
+	SetaDaArma = CreateDefaultSubobject<UArrowComponent>(FName("SetaCanoDaArma"));
+	SetaDaArma->AttachToComponent(MalhaDaArma,
+		FAttachmentTransformRules::SnapToTargetIncludingScale,
+		FName("MuzzleFlashSocket"));
+	//Location em relação a malha da arma
+	SetaDaArma->SetRelativeLocation(FVector(1.5f, 0.f, -1.2f));
+	SetaDaArma->SetRelativeScale3D(FVector(0.3f, 0.8f, 0.7f));
 }
 
 // Called when the game starts or when spawned

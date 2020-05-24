@@ -22,7 +22,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Arma")
 	class USkeletalMeshComponent* MalhaDaArma;
 
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Arma")
+	class UArrowComponent* SetaDaArma;
 
 public:	
 	// Called every frame
