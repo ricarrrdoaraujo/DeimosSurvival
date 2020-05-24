@@ -11,6 +11,10 @@
 #include "Engine/World.h"
 #include "Arma.h"
 #include "Engine/EngineTypes.h"
+#include "Engine/Engine.h"
+#include "Components/ArrowComponent.h"
+#include "Components/SceneComponent.h"
+#include "Engine/Public/WorldCollision.h"
 
 
 // Sets default values
@@ -50,7 +54,8 @@ void APersonagemTPS::BeginPlay()
 	
 	FActorSpawnParameters Parametros;
 	Parametros.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	AArma* ArmaPlayer = GetWorld()->SpawnActor<AArma>(BP_ArmaTipoRifle, FTransform(), Parametros);
+	
+	ArmaPlayer = GetWorld()->SpawnActor<AArma>(BP_ArmaTipoRifle, FTransform(), Parametros);
 	ArmaPlayer->AttachToComponent(Cast<USceneComponent>(GetMesh()),
 		FAttachmentTransformRules::SnapToTargetIncludingScale,
 		("SocketDaArma"));
@@ -75,6 +80,11 @@ void APersonagemTPS::Agachar()
 void APersonagemTPS::Levantar()
 {
 	UnCrouch();
+}
+
+void APersonagemTPS::Atirar()
+{
+	ArmaPlayer->Atirar();
 }
 
 // Called every frame
@@ -125,4 +135,7 @@ void APersonagemTPS::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		&APersonagemTPS::Pular);
 	PlayerInputComponent->BindAction("Pular", EInputEvent::IE_Released, this,
 		&APersonagemTPS::PararPulo);
+
+	PlayerInputComponent->BindAction("Atirar", EInputEvent::IE_Pressed, this,
+		&APersonagemTPS::Atirar);
 }

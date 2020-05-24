@@ -47,7 +47,11 @@ protected:
 	//Unchrouch
 	void Levantar();
 
+	//Faz com que a arma atire
+	void Atirar();
+
 public:	
+	class AArma* ArmaPlayer;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
