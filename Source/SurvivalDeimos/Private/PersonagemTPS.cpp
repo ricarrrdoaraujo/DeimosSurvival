@@ -84,6 +84,7 @@ void APersonagemTPS::Levantar()
 
 void APersonagemTPS::Atirar()
 {
+	//Chamando função atirar da classe AArma
 	ArmaPlayer->Atirar();
 }
 

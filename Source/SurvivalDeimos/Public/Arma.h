@@ -30,6 +30,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Arma", meta = (AllowPrivateAccess = "true"))
 	class UArrowComponent* SetaDaArma;
 
+	UPROPERTY(EditAnywhere, Category = "EfeitosDaArma")
+	class UParticleSystem* EfeitoMuzzle;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

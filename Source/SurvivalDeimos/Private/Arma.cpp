@@ -10,12 +10,18 @@
 #include "Engine/Public/DrawDebugHelpers.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/SkeletalMesh.h"
+#include "Particles/ParticleSystem.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
 
 // Sets default values
 AArma::AArma()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	EfeitoMuzzle = nullptr;
+
 	MalhaDaArma = CreateDefaultSubobject<USkeletalMeshComponent>(FName("MalhaDaArma"));
 
 	ConstructorHelpers::FObjectFinder<USkeletalMesh>MeshDaArma(TEXT("SkeletalMesh'/Game/Weapons/Rifle.Rifle'"));
@@ -87,6 +93,20 @@ void AArma::Atirar()
 		}
 
 		DrawDebugLine(GetWorld(), Inicio, Fim, FColor::Red, false, 5.0f, (uint8)0, 1.0f);
+
+		//Se for setado algum efeito muzzle na blueprint da arma, EfeitoMuzzle
+		//receberá um endereço de memória
+
+		if (EfeitoMuzzle)
+		{
+			//Para Componentes usamos estas funções GetComponent, já para atores seriam
+			//GetActorLocation
+			FVector Localizacao = SetaDaArma->GetComponentLocation();
+			FRotator Rotacao = SetaDaArma->GetComponentRotation();
+			//Se valores forem igual podemos inicial com um único parâmetro
+			FVector Escala = FVector(0.9f);
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), EfeitoMuzzle, Localizacao, Rotacao, Escala, true);
+		}
 	}
 }
 
