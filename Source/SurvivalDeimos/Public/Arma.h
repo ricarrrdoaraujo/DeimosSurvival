@@ -39,6 +39,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "EfeitosImpacto")
 	class UParticleSystem* ImpactoGeral;
 
+	UPROPERTY(EditAnywhere, Category = "EfeitosImpacto")
+	class UMaterialInterface* DecalImpactoGeral;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

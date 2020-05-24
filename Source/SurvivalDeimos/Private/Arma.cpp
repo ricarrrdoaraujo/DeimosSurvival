@@ -14,6 +14,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Animation/SkeletalMeshActor.h"
+#include "Materials/MaterialInterface.h"
+#include "Math/UnrealMathUtility.h"
 
 // Sets default values
 AArma::AArma()
@@ -21,9 +23,11 @@ AArma::AArma()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Se protegendo contra crash caso não seja setado na blueprint
 	EfeitoMuzzle = nullptr;
 	ImpactoSangue = nullptr;
 	ImpactoGeral = nullptr;
+	DecalImpactoGeral = nullptr;
 
 	MalhaDaArma = CreateDefaultSubobject<USkeletalMeshComponent>(FName("MalhaDaArma"));
 
@@ -108,6 +112,12 @@ void AArma::Atirar()
 			{
 				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactoGeral,
 					InfoImpacto.Location, InfoImpacto.ImpactNormal.Rotation(), true);
+
+				FVector TamanhoVariavel = FVector(FMath::RandRange(10.f, 50.f));
+				UGameplayStatics::SpawnDecalAttached(DecalImpactoGeral,
+					TamanhoVariavel, InfoImpacto.GetComponent(), NAME_None,
+					InfoImpacto.Location, InfoImpacto.ImpactNormal.Rotation(),
+					EAttachLocation::KeepWorldPosition, 60.f);
 			}
 		}
 
