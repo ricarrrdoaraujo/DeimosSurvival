@@ -29,6 +29,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class USpringArmComponent* SpringArmCamera;
 
+	//variável capaz de receber qualquer tipo de
+	//endereço de classe de Arma ou subclasse de Arma
+	UPROPERTY(EditAnywhere, Category = "Arma")
+	TSubclassOf<class AArma> BP_ArmaTipoRifle;
+
 	UPROPERTY(BlueprintReadOnly, Category = "Pulo")
 	bool bEstaPulando;
 

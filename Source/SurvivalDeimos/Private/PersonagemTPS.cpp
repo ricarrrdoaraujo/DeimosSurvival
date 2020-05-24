@@ -8,6 +8,9 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Character.h"
+#include "Engine/World.h"
+#include "Arma.h"
+#include "Engine/EngineTypes.h"
 
 
 // Sets default values
@@ -16,12 +19,14 @@ APersonagemTPS::APersonagemTPS()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SpringArmCamera = CreateDefaultSubobject<USpringArmComponent>(FName("ApringArmCamera"));
+	SpringArmCamera = CreateDefaultSubobject<USpringArmComponent>(FName("SpringArmCamera"));
 	//tamanho do braçco da spring
 	SpringArmCamera->TargetArmLength = 200.f; 
 	//usar rotacao do personagem
 	SpringArmCamera->bUsePawnControlRotation = true; 
 	SpringArmCamera->AddRelativeLocation(FVector(0.f, 40.f, 50.f));
+	SpringArmCamera->bEnableCameraLag = true;
+	SpringArmCamera->CameraLagSpeed = 40.f;
 	SpringArmCamera->SetupAttachment(RootComponent);
 
 	CameraPersonagem = CreateDefaultSubobject<UCameraComponent>(FName("CameraPersonagem"));
@@ -33,6 +38,7 @@ APersonagemTPS::APersonagemTPS()
 	GetCharacterMovement()->AirControl = 0.05f;
 	GetCharacterMovement()->JumpZVelocity = 425.f;
 	GetCharacterMovement()->GravityScale = 1.5f;
+	GetCharacterMovement()->CrouchedHalfHeight = 70.f;
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
@@ -41,6 +47,13 @@ APersonagemTPS::APersonagemTPS()
 void APersonagemTPS::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	FActorSpawnParameters Parametros;
+	Parametros.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	AArma* ArmaPlayer = GetWorld()->SpawnActor<AArma>(BP_ArmaTipoRifle, FTransform(), Parametros);
+	ArmaPlayer->AttachToComponent(Cast<USceneComponent>(GetMesh()),
+		FAttachmentTransformRules::SnapToTargetIncludingScale,
+		("SocketDaArma"));
 	
 }
 
