@@ -33,6 +33,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "EfeitosDaArma")
 	class UParticleSystem* EfeitoMuzzle;
 
+	UPROPERTY(EditAnywhere, Category = "EfeitosImpacto")
+	class UParticleSystem* ImpactoSangue;
+
+	UPROPERTY(EditAnywhere, Category = "EfeitosImpacto")
+	class UParticleSystem* ImpactoGeral;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

@@ -13,6 +13,7 @@
 #include "Particles/ParticleSystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "Animation/SkeletalMeshActor.h"
 
 // Sets default values
 AArma::AArma()
@@ -21,6 +22,8 @@ AArma::AArma()
 	PrimaryActorTick.bCanEverTick = true;
 
 	EfeitoMuzzle = nullptr;
+	ImpactoSangue = nullptr;
+	ImpactoGeral = nullptr;
 
 	MalhaDaArma = CreateDefaultSubobject<USkeletalMeshComponent>(FName("MalhaDaArma"));
 
@@ -90,9 +93,25 @@ void AArma::Atirar()
 		if (AcertouEmAlgo)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Acertou em Algo"));
+			//Qual ator que o raio impactou
+			AActor* Ator = InfoImpacto.GetActor();
+			//Se a classe do ator que o raio atingiu for do tipo SkeletonMeshActor
+			//ou subclasses dela, entre neste if. ImpactoSangue precisa ser válido
+			if (Ator->GetClass()->IsChildOf(ASkeletalMeshActor::StaticClass()) &&
+				ImpactoSangue)
+			{
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactoSangue,
+					InfoImpacto.Location, InfoImpacto.ImpactNormal.Rotation(), true);
+			}
+			//Se não for inimigo humanoide não queremos que a partícula seja sangue
+			else if (ImpactoGeral)
+			{
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactoGeral,
+					InfoImpacto.Location, InfoImpacto.ImpactNormal.Rotation(), true);
+			}
 		}
 
-		DrawDebugLine(GetWorld(), Inicio, Fim, FColor::Red, false, 5.0f, (uint8)0, 1.0f);
+		//DrawDebugLine(GetWorld(), Inicio, Fim, FColor::Red, false, 5.0f, (uint8)0, 1.0f);
 
 		//Se for setado algum efeito muzzle na blueprint da arma, EfeitoMuzzle
 		//receberá um endereço de memória
