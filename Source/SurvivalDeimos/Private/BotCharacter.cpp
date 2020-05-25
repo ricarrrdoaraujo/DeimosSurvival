@@ -53,11 +53,20 @@ void ABotCharacter::SetHealth(float Dano)
 	else if (Health <= 0.0f)
 	{
 		bEstaMorto = true;
+		//Inimigo vai ter 10 segundos de vida
+		SetLifeSpan(10.f);
+		//Destuir a marma quando ele morrer
+		ArmaInimigo->Destroy();
 	}
 }
 
 float ABotCharacter::GetHealth()
 {
 	return Health;
+}
+
+bool ABotCharacter::IsEstaMorto()
+{
+	return bEstaMorto;
 }
 

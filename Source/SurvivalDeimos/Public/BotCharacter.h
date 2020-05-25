@@ -43,4 +43,7 @@ public:
 	UFUNCTION()
 	float GetHealth();
 
+	UFUNCTION()
+	bool IsEstaMorto();
+
 };

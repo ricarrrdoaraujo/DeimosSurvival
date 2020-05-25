@@ -10,6 +10,7 @@
 #include "BotCharacter.h"
 #include "Engine/Engine.h"
 #include "Arma.h"
+#include "PersonagemTPS.h"
 
 ABotAIController::ABotAIController()
 {
@@ -54,9 +55,25 @@ void ABotAIController::OnPossess(APawn* InPawn)
 void ABotAIController::OnSeePawn(APawn* SensedPawn)
 {
 	ABotCharacter* Bot = Cast<ABotCharacter>(GetPawn());
+	//OnSeePawn recebe o objeto detectado no sensor do inimigo(BotCharacter)
+	//Mas SensedPawn retorna um objeto da classe genérica do player (APawn)
+	//Fazendo um cast para a classe do Player e colocando o resultado
+	//deste objeto especializafo em Player
+	APersonagemTPS* Player = Cast<APersonagemTPS>(SensedPawn);
 	//Somente se o inimigo tiver Health ele vai continuar a atirar
 	// e perseguir o Player
-	if (Bot->GetHealth() > 0.0f)
+	//Se o inimigo ou o player estiver morto, coloque enemy como nulo
+	//para parar o Bot de perseguir ele, pois na BehaviorTree não 
+	//estará setado se for nullptr
+	if (Bot->GetHealth() <= 0.0f || Player->IsEstaMorto())
+	{
+		BlackBoardComp->SetValueAsObject("Inimigo", nullptr);
+		return;
+	}
+
+	//Se o Health do bot for maior que zero e o player não
+	//estiver morto, continue a perseguir e atire no player
+	if (Bot->GetHealth() > 0.0f && !Player->IsEstaMorto())
 	{
 		if (BlackBoardComp && SensedPawn)
 		{
@@ -77,4 +94,6 @@ void ABotAIController::OnSeePawn(APawn* SensedPawn)
 			Bot->ArmaInimigo->Atirar();
 		}
 	}
+	
+	
 }

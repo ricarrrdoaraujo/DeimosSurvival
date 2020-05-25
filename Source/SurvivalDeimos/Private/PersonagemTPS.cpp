@@ -106,6 +106,11 @@ float APersonagemTPS::GetHealth()
 	return Health;
 }
 
+bool APersonagemTPS::IsEstaMorto()
+{
+	return bEstaMorto;
+}
+
 // Called every frame
 void APersonagemTPS::Tick(float DeltaTime)
 {
