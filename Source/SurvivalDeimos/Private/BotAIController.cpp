@@ -9,6 +9,7 @@
 #include "GameFramework/Pawn.h"
 #include "BotCharacter.h"
 #include "Engine/Engine.h"
+#include "Arma.h"
 
 ABotAIController::ABotAIController()
 {
@@ -35,7 +36,7 @@ void ABotAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 	////Se o sensor do inimigo disparar um evento,
-	//significa que ele detectou o nosso jogador
+	//significa que ele detectou o jogador
 	//que para ele é seu inimigo.
 	PawnSensingComp->OnSeePawn.AddDynamic(this,
 		&ABotAIController::OnSeePawn);
@@ -64,5 +65,10 @@ void ABotAIController::OnSeePawn(APawn* SensedPawn)
 		//Aí é setado false no blackboard para que a árvore de comportamento
 		//leia e trate este valor.
 		BlackBoardComp->SetValueAsBool("DevePerambular", false);
+		//GetPawn() devolve um objeto genérico do tipo a Pawn
+		ABotCharacter* Bot = Cast<ABotCharacter>(GetPawn());
+		//Toda vez que o Bot ver o player ele vai atirar
+		//com sensibilidade .25 do sensor
+		Bot->ArmaInimigo->Atirar();
 	}
 }
