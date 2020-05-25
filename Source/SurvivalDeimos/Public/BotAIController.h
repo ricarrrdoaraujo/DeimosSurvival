@@ -34,7 +34,7 @@ protected:
 	class UBehaviorTreeComponent* BehaviorTreeComp;
 
 	UPROPERTY(EdityDefaultsOnly)
-	class UBlackBoardComponent* BlackBoardComp;
+	class UBlackboardComponent* BlackBoardComp;
 	
 	UFUNCTION()
 	void OnSeePawn(class APawn* SensePawn);
