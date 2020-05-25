@@ -88,6 +88,24 @@ void APersonagemTPS::Atirar()
 	ArmaPlayer->Atirar();
 }
 
+void APersonagemTPS::SetHealth(float Dano)
+{
+	if (Health > 0.0f)
+	{
+		Health -= Dano;
+	}
+	else if (Health <= 0.0f)
+	{
+		bEstaMorto = true;
+	}
+	
+}
+
+float APersonagemTPS::GetHealth()
+{
+	return Health;
+}
+
 // Called every frame
 void APersonagemTPS::Tick(float DeltaTime)
 {

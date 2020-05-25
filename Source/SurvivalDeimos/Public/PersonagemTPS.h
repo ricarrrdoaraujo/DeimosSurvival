@@ -49,6 +49,12 @@ protected:
 
 	//Faz com que a arma atire
 	void Atirar();
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,Category = "Health")
+	float Health;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Health")
+	bool bEstaMorto;
 
 public:	
 	class AArma* ArmaPlayer;
@@ -58,4 +64,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION()
+	void SetHealth(float Dano);
+
+	UFUNCTION()
+	float GetHealth();
 };

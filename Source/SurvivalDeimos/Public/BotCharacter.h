@@ -22,6 +22,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Arma")
 	TSubclassOf<class AArma> BP_ArmaTipoRifle;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Health")
+	float Health;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Health")
+	bool bEstaMorto;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -30,5 +36,11 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	class AArma* ArmaInimigo;
+
+	UFUNCTION()
+	void SetHealth(float Dano);
+
+	UFUNCTION()
+	float GetHealth();
 
 };

@@ -5,6 +5,8 @@
 #include "Engine/World.h"
 #include "Arma.h"
 #include "Engine/EngineTypes.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 
 // Sets default values
 ABotCharacter::ABotCharacter()
@@ -40,5 +42,22 @@ void ABotCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ABotCharacter::SetHealth(float Dano)
+{
+	if (Health > 0.0f)
+	{
+		Health -= Dano;
+	}
+	else if (Health <= 0.0f)
+	{
+		bEstaMorto = true;
+	}
+}
+
+float ABotCharacter::GetHealth()
+{
+	return Health;
 }
 

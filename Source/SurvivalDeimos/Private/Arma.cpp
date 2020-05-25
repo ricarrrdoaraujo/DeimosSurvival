@@ -17,6 +17,9 @@
 #include "Materials/MaterialInterface.h"
 #include "Math/UnrealMathUtility.h"
 #include "Sound/SoundBase.h"
+#include "GameFramework/Character.h"
+#include "PersonagemTPS.h"
+#include "BotCharacter.h"
 
 // Sets default values
 AArma::AArma()
@@ -108,11 +111,36 @@ void AArma::Atirar()
 			AActor* Ator = InfoImpacto.GetActor();
 			//Se a classe do ator que o raio atingiu for do tipo SkeletonMeshActor
 			//ou subclasses dela, entre neste if. ImpactoSangue precisa ser válido
-			if (Ator->GetClass()->IsChildOf(ASkeletalMeshActor::StaticClass()) &&
+			if (Ator->GetClass()->IsChildOf(ACharacter::StaticClass()) &&
 				ImpactoSangue)
 			{
 				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactoSangue,
 					InfoImpacto.Location, InfoImpacto.ImpactNormal.Rotation(), true);
+
+				//Tantando um Cast para o objeto do tipo Player
+				//APersonagemTPS se o ponteiro Jogador não estiver vazio
+				//significa que o cast deu certo e que o trace do tiro atingiu um jogador
+				APersonagemTPS* Jogador = Cast<APersonagemTPS>(Ator);
+				//Então vai entrar no if e setar o health dele menos 0.25 a cada tiro recebido
+				if (Jogador != nullptr)
+				{
+					Jogador->SetHealth(0.25f);
+				}
+				else
+					//Se não for um jogador o cast irá falhar e o ponteiro Jogador será
+					//nulo, entrando no else
+				{
+					//Tentando novamente o cast mas desta vez para o tipo da classe
+					//pertencente ao objeto inimigo
+					//Logo se o resultado da colisão do line trace que está em Ator
+					//puder ser realizado este Cast, significa que o tiro atingiu
+					//um inimigo e o ponteiro do inimigo não será nulo
+					ABotCharacter* Inimigo = Cast<ABotCharacter>(Ator);
+					if (Inimigo != nullptr)
+					{
+						Inimigo->SetHealth(5.f);
+					}
+				}
 			}
 			//Se não for inimigo humanoide não queremos que a partícula seja sangue
 			else if (ImpactoGeral)
