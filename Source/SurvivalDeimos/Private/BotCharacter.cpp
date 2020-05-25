@@ -2,6 +2,9 @@
 
 
 #include "BotCharacter.h"
+#include "Engine/World.h"
+#include "Arma.h"
+#include "Engine/EngineTypes.h"
 
 // Sets default values
 ABotCharacter::ABotCharacter()
@@ -15,6 +18,13 @@ ABotCharacter::ABotCharacter()
 void ABotCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	FActorSpawnParameters Parametros;
+	Parametros.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	ArmaInimigo = GetWorld()->SpawnActor<AArma>(BP_ArmaTipoRifle, FTransform(), Parametros);
+	ArmaInimigo->AttachToComponent(Cast<USceneComponent>(GetMesh()),
+		FAttachmentTransformRules::SnapToTargetIncludingScale,
+		("SocketDaArma"));
 	
 }
 

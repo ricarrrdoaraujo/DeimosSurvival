@@ -24,18 +24,20 @@ protected:
 
 	//O SensingComponent encapsula configuracoes e funcionalidades
 	//sensoriais(vião, audição) de um ator.
-	UPROPERTY(EdityDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly)
 	class UPawnSensingComponent* PawnSensingComp;
 
-	UPROPERTY(EdityDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly)
 	class UBehaviorTree* BehaviorTree;
 
-	UPROPERTY(EdityDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly)
 	class UBehaviorTreeComponent* BehaviorTreeComp;
 
-	UPROPERTY(EdityDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly)
 	class UBlackboardComponent* BlackBoardComp;
 	
+	//Função delegate que será chamada
+	//quando a função OnSeePawn ocorrer
 	UFUNCTION()
 	void OnSeePawn(class APawn* SensePawn);
 };

@@ -8,32 +8,61 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/Pawn.h"
 #include "BotCharacter.h"
+#include "Engine/Engine.h"
 
 ABotAIController::ABotAIController()
 {
+	//Contrutor que cria o component de sensores do BotInimigo
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(FName(TEXT("PawnSensingComp")));
+
+	//**Como os sensores do inimigo deverão atuar**
+	//Deve fazer a varredura sensorial a cada .25 segundos
 	PawnSensingComp->SensingInterval = .25f;
+	//Deve tetectar, sersensivel a detecção apenas de players
 	PawnSensingComp->bOnlySensePlayers = true;
+	//O ângulo de visão deve ser de 180 graus, isso facilita ver de costas
 	PawnSensingComp->SetPeripheralVisionAngle(180.f);
+	//O raio de visão será de 3000 unidades
 	PawnSensingComp->SightRadius = 3000.f;
 
-	BlackBoardComp = CreateDefaultSubobject<UBlackboardComponent>(FName("BackBoardComp"));
+	//Componente de BT para manipular a BT criada
+	BehaviorTreeComp = CreateDefaultSubobject<UBehaviorTreeComponent>(FName("BehaviorTreeComp"));
+	//Da mesma forma criando um componente de blackboard para podermos colocar variaveis, alterar seu valor, etc
+	BlackBoardComp = CreateDefaultSubobject<UBlackboardComponent>(FName("BlackBoardComp"));
 }
 
 void ABotAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
+	////Se o sensor do inimigo disparar um evento,
+	//significa que ele detectou o nosso jogador
+	//que para ele é seu inimigo.
 	PawnSensingComp->OnSeePawn.AddDynamic(this,
 		&ABotAIController::OnSeePawn);
 
 	if (BehaviorTree)
 	{
+		//Iniciando Blackboard e BehaviorTree
 		BlackBoardComp->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 		BehaviorTreeComp->StartTree(*BehaviorTree);
+		//Se o bot ainda não viu o jogador, ele deve ficar patrulhando
 		BlackBoardComp->SetValueAsBool("DevePerambular", true);
 	}
 }
 
-void ABotAIController::OnSeePawn(APawn* SensePawn)
+void ABotAIController::OnSeePawn(APawn* SensedPawn)
 {
+	if (BlackBoardComp && SensedPawn)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Eu estou te vendo"));
+		//Setando a variável do Blackboard Inimigo com o valor do objeto.
+		//SensedPawn: Este objeto é retornado quando o game está em execução
+		//e o sensor do inimigo detecta seu inimigo(no caso o player)
+		//Então o objeto player é colocado em inimigo, que é Object no Blackboard
+		BlackBoardComp->SetValueAsObject("Inimigo", SensedPawn);
+		//Se esta função for chamada significa que o inimigo viu um jogador
+		//Aí é setado false no blackboard para que a árvore de comportamento
+		//leia e trate este valor.
+		BlackBoardComp->SetValueAsBool("DevePerambular", false);
+	}
 }
