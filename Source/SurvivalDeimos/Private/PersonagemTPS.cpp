@@ -15,7 +15,7 @@
 #include "Components/ArrowComponent.h"
 #include "Components/SceneComponent.h"
 #include "Engine/Public/WorldCollision.h"
-
+#include "GameFramework/PlayerController.h"
 
 // Sets default values
 APersonagemTPS::APersonagemTPS()
@@ -97,6 +97,14 @@ void APersonagemTPS::SetHealth(float Dano)
 	else if (Health <= 0.0f)
 	{
 		bEstaMorto = true;
+		//Busca o controlador do personagem e coloca o endereço no ponteiro PlayerController
+		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+		//Macro para verificar se o ponteiro está Ok e evitar problemas de crash
+		check(PlayerController);
+		//Com o objeto PlayerController buscamos o Player via GetPawn e
+		//depois desabilitamos o Input deste Jogador para evitar que ele se mova
+		//ao morrer
+		PlayerController->GetPawn()->DisableInput(PlayerController);
 	}
 	
 }

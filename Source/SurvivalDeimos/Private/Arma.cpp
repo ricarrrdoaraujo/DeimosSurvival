@@ -124,7 +124,7 @@ void AArma::Atirar()
 				//Então vai entrar no if e setar o health dele menos 0.25 a cada tiro recebido
 				if (Jogador != nullptr)
 				{
-					Jogador->SetHealth(0.25f);
+					Jogador->SetHealth(10.f);
 				}
 				else
 					//Se não for um jogador o cast irá falhar e o ponteiro Jogador será
