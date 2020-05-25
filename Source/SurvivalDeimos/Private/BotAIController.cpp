@@ -53,22 +53,28 @@ void ABotAIController::OnPossess(APawn* InPawn)
 
 void ABotAIController::OnSeePawn(APawn* SensedPawn)
 {
-	if (BlackBoardComp && SensedPawn)
+	ABotCharacter* Bot = Cast<ABotCharacter>(GetPawn());
+	//Somente se o inimigo tiver Health ele vai continuar a atirar
+	// e perseguir o Player
+	if (Bot->GetHealth() > 0.0f)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Eu estou te vendo"));
-		//Setando a variável do Blackboard Inimigo com o valor do objeto.
-		//SensedPawn: Este objeto é retornado quando o game está em execução
-		//e o sensor do inimigo detecta seu inimigo(no caso o player)
-		//Então o objeto player é colocado em inimigo, que é Object no Blackboard
-		BlackBoardComp->SetValueAsObject("Inimigo", SensedPawn);
-		//Se esta função for chamada significa que o inimigo viu um jogador
-		//Aí é setado false no blackboard para que a árvore de comportamento
-		//leia e trate este valor.
-		BlackBoardComp->SetValueAsBool("DevePerambular", false);
-		//GetPawn() devolve um objeto genérico do tipo a Pawn
-		ABotCharacter* Bot = Cast<ABotCharacter>(GetPawn());
-		//Toda vez que o Bot ver o player ele vai atirar
-		//com sensibilidade .25 do sensor
-		Bot->ArmaInimigo->Atirar();
+		if (BlackBoardComp && SensedPawn)
+		{
+			//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Eu estou te vendo"));
+			//Setando a variável do Blackboard Inimigo com o valor do objeto.
+			//SensedPawn: Este objeto é retornado quando o game está em execução
+			//e o sensor do inimigo detecta seu inimigo(no caso o player)
+			//Então o objeto player é colocado em inimigo, que é Object no Blackboard
+			BlackBoardComp->SetValueAsObject("Inimigo", SensedPawn);
+			//Se esta função for chamada significa que o inimigo viu um jogador
+			//Aí é setado false no blackboard para que a árvore de comportamento
+			//leia e trate este valor.
+			BlackBoardComp->SetValueAsBool("DevePerambular", false);
+			//GetPawn() devolve um objeto genérico do tipo a Pawn
+
+			//Toda vez que o Bot ver o player ele vai atirar
+			//com sensibilidade .25 do sensor
+			Bot->ArmaInimigo->Atirar();
+		}
 	}
 }
