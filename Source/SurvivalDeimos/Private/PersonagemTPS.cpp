@@ -16,6 +16,9 @@
 #include "Components/SceneComponent.h"
 #include "Engine/Public/WorldCollision.h"
 #include "GameFramework/PlayerController.h"
+#include "Components/CapsuleComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Engine/LatentActionManager.h"
 
 // Sets default values
 APersonagemTPS::APersonagemTPS()
@@ -39,8 +42,8 @@ APersonagemTPS::APersonagemTPS()
 	//Indicando que o personagem poderá fazer o agachamento
 	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
-	GetCharacterMovement()->AirControl = 0.05f;
-	GetCharacterMovement()->JumpZVelocity = 425.f;
+	GetCharacterMovement()->AirControl = 3.f;
+	GetCharacterMovement()->JumpZVelocity = 700.f;
 	GetCharacterMovement()->GravityScale = 1.5f;
 	GetCharacterMovement()->CrouchedHalfHeight = 70.f;
 
@@ -65,11 +68,35 @@ void APersonagemTPS::BeginPlay()
 void APersonagemTPS::Pular()
 {
 	bEstaPulando = true;
+	float X = GetCapsuleComponent()->GetRelativeLocation().X;
+	float Y = GetCapsuleComponent()->GetRelativeLocation().Y + 40;
+	float Z = GetCapsuleComponent()->GetRelativeLocation().Z + 100;
+	FRotator RotCapsule = GetCapsuleComponent()->GetRelativeRotation();
+	FLatentActionInfo LatentInfo;
+	LatentInfo.CallbackTarget = this;
+	LatentInfo.UUID = GetUniqueID();
+	LatentInfo.ExecutionFunction = "Jump";
+	LatentInfo.Linkage = 0;
+	UKismetSystemLibrary::MoveComponentTo(GetCapsuleComponent(), FVector(X, Y, Z), RotCapsule, false, false, 0.5f, false, EMoveComponentAction::Move, LatentInfo);
+	GetCapsuleComponent()->SetCapsuleHalfHeight(70.f);
 }
+//Movendo a cápsula no pulo
+//UKismetSystemLibrary::MoveComponentTo(
+//	GetCapsuleComponent(), // Aqui deve ser colocado o Componente a ser movido, neste caso a capsula
+//	FVector(X, Y, Z), //Aqui a localização alvo, para qual local será movido o componente
+//	RotCapsule, //Aqui a rotação alvo, que rotação deseja que o componente tenha ao ser movido(no nosso caso a mesma rotação da capsula sem alterações)
+//	false, //se for true, será aliviado o movimento (ou seja, terminará lentamente) durante a movimentação
+//	false, //se for true, o movimento começará devagar e depois fica mais rápido 
+//	0.5f, //O Tempo do deslocamento do alvo... Neste caso coloquei 0.5 pois é +- o tempo do personagem pular ficando no ar
+//	false, //se for true, será usado o caminho mais curto para rotação
+//	EMoveComponentAction::Move, //Uma Enum que indica qual comportamento será efetuado, neste caso Movimentar (Move)
+//	LatentInfo // A ação latente (são coisas bem específicas, mantenha o padrão do código)
+//);
 
 void APersonagemTPS::PararPulo()
 {
 	bEstaPulando = false;
+	GetCapsuleComponent()->SetCapsuleHalfHeight(88.f);
 }
 
 void APersonagemTPS::Agachar()
